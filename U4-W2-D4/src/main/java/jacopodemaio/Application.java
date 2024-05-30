@@ -62,7 +62,7 @@ public class Application {
 
 //        e creo un ciclo in modo che stampi 5 ordini contenenti tutti una lista filtrata
         List<Order> orderList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             orderList.add(orderSupplier.get());
 
         }
@@ -71,15 +71,23 @@ public class Application {
         Map<String, List<Order>> customerOrder = orderList.stream().collect(Collectors.groupingBy(order -> order.getCustomer().getName()));
         customerOrder.forEach((nome, listaOrdini) -> System.out.println("Nome " + nome + ", " + listaOrdini));
         System.out.println();
+
+
         System.out.println("****************************** ES2 *******************************************");
 //        facciamo la somma dei prodotti
-        Map<Object, DoubleSummaryStatistics> totalCost = orderList.stream()
-                .collect(Collectors.groupingBy(order -> order.getCustomer().getName(),
+        Map<Customer, DoubleSummaryStatistics> totalCost = orderList.stream()
+                .collect(Collectors.groupingBy(order -> order.getCustomer(),
                         Collectors.summarizingDouble(order -> order.getProducts().stream().mapToDouble(Product::getPrice).sum())));
         totalCost.forEach((nome, costoTotale) -> System.out.println("Nome " + nome + ", " + "Hai speso un totale di " + costoTotale));
+        System.out.println();
+
+
         System.out.println("****************************** ES3 *******************************************");
         List<Product> highToLow = productList.stream().sorted(Comparator.comparingDouble(Product::getPrice).reversed()).limit(3).toList();
         highToLow.forEach(System.out::println);
+        System.out.println();
+
+
         System.out.println("****************************** ES4 *******************************************");
 //        Double comparePrice = orderList.stream()
 //                .collect(Collectors.averagingDouble(order -> order.getProducts().stream().collect(Collectors.averagingDouble(Product::getPrice))));
@@ -87,9 +95,13 @@ public class Application {
 
         Map<Long, Double> mediaProdotti = orderList.stream().collect(Collectors.groupingBy(order -> order.getId(), Collectors.averagingDouble(order -> order.getProducts().stream().mapToDouble(product -> product.getPrice()).sum())));
         mediaProdotti.forEach((ordine, media) -> System.out.println("il tuo ordine " + ordine + " questa e la media di quanto spenderai " + media));
+        System.out.println();
+
+
         System.out.println("****************************** ES5 *******************************************");
         Map<String, Double> categoriaESommaPrezzi = productList.stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.summingDouble(Product::getPrice)));
         categoriaESommaPrezzi.forEach((categoria, somma) -> System.out.println("questa è la categoria " + categoria + " questa  è la somma di tutti i prodotti presente in essa " + somma));
+
 
     }
 }
